@@ -15,7 +15,7 @@ int maxArrayListSz;
  SETUP
  ////////////////////////////////////////*/
 void setup() {
-  size(640, 480);
+  size(320, 240);
   frameRate(15);
 
   rSn = 47; // 29, 18;
@@ -45,14 +45,29 @@ void draw() {
     if (vtlSz > maxArrayListSz) vidTimeLine.remove(0); // prevents Arraylist from getting too big and causing memory problems
   }        
 
-  if (vtlSz > 299) { // 500 = approx 33 seconds at 15fps 
-    image(vidTimeLine.get(vtlSz-1), 0, 0);              // most recent frame
-    image(vidTimeLine.get(vtlSz-7), width/3, 0);      // about 16 seconds into the past
-    image(vidTimeLine.get(vtlSz-30), 2*(width/3), 0);  // about 30 seconds into the past
+  if (vtlSz > 199) { // 500 = approx 33 seconds at 15fps 
+    for (int i = 0; i < 10; i++) {
+      showSlice(i);
+    }
   }
   if (PDFOUT) exit();
 }
 
+void showSlice(int _i){
+  float portalDia = map(_i, 0, 10, 0, 220);
+  PGraphics msk = createGraphics(width, height);
+  msk.beginDraw();
+  msk.background(255);
+  msk.fill(0);
+  msk.noStroke();
+  msk.ellipse(mouseX, mouseY, portalDia, portalDia);
+  msk.endDraw();
+  PImage f = vidTimeLine.get(_i*3);
+  PImage fm = f.get();
+  fm.mask(msk);
+  image(fm, 0, 0);
+
+}
 
 void keyPressed() {
   // if (key == 'S') screenCap(".tif");
